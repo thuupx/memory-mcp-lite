@@ -1,0 +1,10 @@
+node_modules/
+dist/
+apps/server/src/generated/
+*.db
+*.db-shm
+*.db-wal
+.env
+.env.local
+*.log
+.DS_Store
