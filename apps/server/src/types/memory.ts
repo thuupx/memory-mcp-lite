@@ -1,8 +1,17 @@
 export type MemoryLevel = "global" | "project" | "task" | "atomic";
 
-export type AtomicMemoryType = "decision" | "fact" | "gotcha" | "command" | "link" | "convention";
+export type AtomicMemoryType =
+  | "decision"
+  | "fact"
+  | "gotcha"
+  | "command"
+  | "link"
+  | "convention";
 
-export type SummaryMemoryType = "global_summary" | "project_summary" | "task_summary";
+export type SummaryMemoryType =
+  | "global_summary"
+  | "project_summary"
+  | "task_summary";
 
 export type MemoryType = AtomicMemoryType | SummaryMemoryType;
 

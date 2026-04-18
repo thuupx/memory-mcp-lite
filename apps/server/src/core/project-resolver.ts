@@ -1,5 +1,9 @@
 import path from "path";
-import type { Project, ProjectResolutionInput, ProjectResolutionResult } from "../types/project";
+import type {
+  Project,
+  ProjectResolutionInput,
+  ProjectResolutionResult,
+} from "../types/project";
 import {
   findProjectById,
   findProjectByRemoteUrl,
@@ -28,13 +32,17 @@ export async function resolveProject(
     if (existing) return { project: existing, resolved_by: "id" };
   }
 
-  const explicitRemoteUrl = input.remote_url ? normalizeRemoteUrl(input.remote_url) : null;
+  const explicitRemoteUrl = input.remote_url
+    ? normalizeRemoteUrl(input.remote_url)
+    : null;
   if (explicitRemoteUrl) {
     const existing = await findProjectByRemoteUrl(explicitRemoteUrl);
     if (existing) return { project: existing, resolved_by: "remote_url" };
   }
 
-  const workspacePath = input.workspace_path ? normalizePath(input.workspace_path) : null;
+  const workspacePath = input.workspace_path
+    ? normalizePath(input.workspace_path)
+    : null;
   const gitRoot = input.git_root
     ? normalizePath(input.git_root)
     : workspacePath
@@ -42,7 +50,8 @@ export async function resolveProject(
       : null;
 
   const rawRemote = gitRoot ? tryGetRemoteUrl(gitRoot) : null;
-  const remoteUrl = explicitRemoteUrl ?? (rawRemote ? normalizeRemoteUrl(rawRemote) : null);
+  const remoteUrl =
+    explicitRemoteUrl ?? (rawRemote ? normalizeRemoteUrl(rawRemote) : null);
 
   if (remoteUrl) {
     const existing = await findProjectByRemoteUrl(remoteUrl);
@@ -82,6 +91,10 @@ export async function resolveProject(
 
   await upsertProject(newProject);
 
-  const resolvedBy = remoteUrl ? "remote_url" : gitRoot ? "git_root" : "workspace_path";
+  const resolvedBy = remoteUrl
+    ? "remote_url"
+    : gitRoot
+      ? "git_root"
+      : "workspace_path";
   return { project: newProject, resolved_by: resolvedBy };
 }

@@ -22,21 +22,32 @@ export const rememberDecisionTool = {
   inputSchema: {
     type: "object" as const,
     properties: {
-      title: { type: "string", description: "Short title for this decision (max 200 chars)" },
+      title: {
+        type: "string",
+        description: "Short title for this decision (max 200 chars)",
+      },
       summary: {
         type: "string",
-        description: "Concise summary: what was decided and why (max 500 chars)",
+        description:
+          "Concise summary: what was decided and why (max 500 chars)",
       },
       content: {
         type: "string",
-        description: "Optional detailed rationale, trade-offs, or alternatives considered",
+        description:
+          "Optional detailed rationale, trade-offs, or alternatives considered",
       },
       workspace_path: { type: "string" },
       git_root: { type: "string" },
       remote_url: { type: "string" },
       project_id: { type: "string" },
-      importance: { type: "number", description: "0.0–1.0, defaults to 0.8 for decisions" },
-      source: { type: "string", description: "Optional source reference (file, PR, doc link)" },
+      importance: {
+        type: "number",
+        description: "0.0–1.0, defaults to 0.8 for decisions",
+      },
+      source: {
+        type: "string",
+        description: "Optional source reference (file, PR, doc link)",
+      },
     },
     required: ["title", "summary"],
   },

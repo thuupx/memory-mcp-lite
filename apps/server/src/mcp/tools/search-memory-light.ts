@@ -25,7 +25,10 @@ export const searchMemoryLightTool = {
       git_root: { type: "string" },
       remote_url: { type: "string" },
       project_id: { type: "string" },
-      limit: { type: "number", description: `Max results (default ${LIGHT_SEARCH_LIMIT})` },
+      limit: {
+        type: "number",
+        description: `Max results (default ${LIGHT_SEARCH_LIMIT})`,
+      },
       scope: {
         type: "string",
         enum: ["project", "global"],
@@ -42,7 +45,11 @@ export const searchMemoryLightTool = {
       projectId = project.id;
     }
 
-    const results = await searchMemoryLight(input.query, projectId, input.limit);
+    const results = await searchMemoryLight(
+      input.query,
+      projectId,
+      input.limit,
+    );
     return { ok: true, data: results, count: results.length };
   },
 };

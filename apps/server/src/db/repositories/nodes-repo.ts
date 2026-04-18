@@ -12,7 +12,13 @@ export async function updateMemoryNode(
   patch: Partial<
     Pick<
       MemoryNode,
-      "title" | "summary" | "content" | "status" | "importance" | "metadata_json" | "updated_at"
+      | "title"
+      | "summary"
+      | "content"
+      | "status"
+      | "importance"
+      | "metadata_json"
+      | "updated_at"
     >
   >,
 ): Promise<void> {
@@ -20,8 +26,12 @@ export async function updateMemoryNode(
   await client.memoryNode.update({ where: { id }, data: patch });
 }
 
-export async function getMemoryNodeById(id: string): Promise<MemoryNode | null> {
-  return (await client.memoryNode.findUnique({ where: { id } })) as MemoryNode | null;
+export async function getMemoryNodeById(
+  id: string,
+): Promise<MemoryNode | null> {
+  return (await client.memoryNode.findUnique({
+    where: { id },
+  })) as MemoryNode | null;
 }
 
 export async function getMemoryNodesByProjectAndType(
@@ -34,7 +44,9 @@ export async function getMemoryNodesByProjectAndType(
   })) as MemoryNode[];
 }
 
-export async function getChildNodes(parentId: string): Promise<MemoryCandidate[]> {
+export async function getChildNodes(
+  parentId: string,
+): Promise<MemoryCandidate[]> {
   return (await client.memoryNode.findMany({
     where: { parent_id: parentId, status: "active" },
     select: {
@@ -50,7 +62,10 @@ export async function getChildNodes(parentId: string): Promise<MemoryCandidate[]
   })) as MemoryCandidate[];
 }
 
-export async function insertClosureRows(nodeId: string, parentId: string | null): Promise<void> {
+export async function insertClosureRows(
+  nodeId: string,
+  parentId: string | null,
+): Promise<void> {
   await client.$executeRaw`
     INSERT OR IGNORE INTO memory_closure (ancestor_id, descendant_id, depth)
     VALUES (${nodeId}, ${nodeId}, 0)

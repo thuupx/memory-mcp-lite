@@ -1,4 +1,8 @@
-export type RetrievalDecision = "skip" | "summaries_only" | "light_search" | "full_detail";
+export type RetrievalDecision =
+  | "skip"
+  | "summaries_only"
+  | "light_search"
+  | "full_detail";
 
 const SUMMARY_KEYWORDS = [
   "continue",

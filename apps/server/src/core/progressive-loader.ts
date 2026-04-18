@@ -1,4 +1,8 @@
-import type { SummaryOutput, LightSearchResult, DetailOutput } from "../types/tool";
+import type {
+  SummaryOutput,
+  LightSearchResult,
+  DetailOutput,
+} from "../types/tool";
 import {
   getGlobalSummary,
   getProjectSummary,
@@ -28,17 +32,31 @@ export interface ProgressiveLoadResult {
   details: DetailOutput[];
 }
 
-const EMPTY_SUMMARIES: SummaryStage = { global: null, project: null, task: null };
+const EMPTY_SUMMARIES: SummaryStage = {
+  global: null,
+  project: null,
+  task: null,
+};
 
 export async function progressiveLoad(
   options: ProgressiveLoadOptions,
 ): Promise<ProgressiveLoadResult> {
-  const { query, projectId, includeGlobal = true, autoDetailTopN = 0 } = options;
+  const {
+    query,
+    projectId,
+    includeGlobal = true,
+    autoDetailTopN = 0,
+  } = options;
 
   const decision = gateRetrieval(query);
 
   if (decision === "skip") {
-    return { stage: "skipped", summaries: EMPTY_SUMMARIES, candidates: [], details: [] };
+    return {
+      stage: "skipped",
+      summaries: EMPTY_SUMMARIES,
+      candidates: [],
+      details: [],
+    };
   }
 
   const summaries = await loadSummaryStage(projectId, includeGlobal);
@@ -63,9 +81,9 @@ export async function progressiveLoad(
   );
 
   const topIds = candidates.slice(0, topN).map((c) => c.id);
-  const details = (await Promise.all(topIds.map((id) => getMemoryDetail(id)))).filter(
-    (d): d is DetailOutput => d !== null,
-  );
+  const details = (
+    await Promise.all(topIds.map((id) => getMemoryDetail(id)))
+  ).filter((d): d is DetailOutput => d !== null);
 
   return { stage: "full_detail", summaries, candidates, details };
 }

@@ -4,7 +4,10 @@ import {
   getSummaryByTypeAndProject,
   upsertSummaryNode,
 } from "../db/repositories/summaries-repo";
-import { syncSearchIndex, insertClosureRows } from "../db/repositories/nodes-repo";
+import {
+  syncSearchIndex,
+  insertClosureRows,
+} from "../db/repositories/nodes-repo";
 import { generateId } from "../utils/ids";
 import { nowIso } from "../utils/time";
 import { GLOBAL_PROJECT_ID } from "../config/constants";
@@ -21,11 +24,16 @@ function toOutput(node: MemoryNode): SummaryOutput {
 }
 
 export async function getGlobalSummary(): Promise<SummaryOutput | null> {
-  const node = await getSummaryByTypeAndProject(GLOBAL_PROJECT_ID, "global_summary");
+  const node = await getSummaryByTypeAndProject(
+    GLOBAL_PROJECT_ID,
+    "global_summary",
+  );
   return node ? toOutput(node) : null;
 }
 
-export async function getProjectSummary(projectId: string): Promise<SummaryOutput | null> {
+export async function getProjectSummary(
+  projectId: string,
+): Promise<SummaryOutput | null> {
   const node = await getSummaryByTypeAndProject(projectId, "project_summary");
   return node ? toOutput(node) : null;
 }
@@ -34,7 +42,11 @@ export async function getTaskSummary(
   projectId: string,
   taskId?: string,
 ): Promise<SummaryOutput | null> {
-  const node = await getSummaryByTypeAndProject(projectId, "task_summary", taskId);
+  const node = await getSummaryByTypeAndProject(
+    projectId,
+    "task_summary",
+    taskId,
+  );
   return node ? toOutput(node) : null;
 }
 

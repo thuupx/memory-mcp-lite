@@ -25,7 +25,8 @@ export const upsertTaskSummaryTool = {
       },
       summary: {
         type: "string",
-        description: "Current task state: what was done, blockers, next steps (max 2000 chars)",
+        description:
+          "Current task state: what was done, blockers, next steps (max 2000 chars)",
       },
       workspace_path: { type: "string" },
       git_root: { type: "string" },

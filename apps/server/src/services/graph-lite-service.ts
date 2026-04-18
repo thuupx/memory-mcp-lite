@@ -1,7 +1,12 @@
 import { client } from "../db/client";
 import type { MemoryEdge } from "../types/memory";
 import type { LightSearchResult } from "../types/tool";
-import { insertEdge, getEdgesFrom, getEdgesTo, deleteEdge } from "../db/repositories/edges-repo";
+import {
+  insertEdge,
+  getEdgesFrom,
+  getEdgesTo,
+  deleteEdge,
+} from "../db/repositories/edges-repo";
 import { EDGE_RELATIONS, type EdgeRelation } from "../db/schema";
 
 export { EDGE_RELATIONS };
@@ -40,7 +45,10 @@ export async function getRelatedNodes(
   nodeId: string,
   relation?: EdgeRelation,
 ): Promise<RelatedNode[]> {
-  const [outEdges, inEdges] = await Promise.all([getEdgesFrom(nodeId), getEdgesTo(nodeId)]);
+  const [outEdges, inEdges] = await Promise.all([
+    getEdgesFrom(nodeId),
+    getEdgesTo(nodeId),
+  ]);
 
   const filtered = {
     out: relation ? outEdges.filter((e) => e.relation === relation) : outEdges,
@@ -48,8 +56,16 @@ export async function getRelatedNodes(
   };
 
   const targetIds = [
-    ...filtered.out.map((e) => ({ id: e.to_id, relation: e.relation, direction: "from" as const })),
-    ...filtered.in.map((e) => ({ id: e.from_id, relation: e.relation, direction: "to" as const })),
+    ...filtered.out.map((e) => ({
+      id: e.to_id,
+      relation: e.relation,
+      direction: "from" as const,
+    })),
+    ...filtered.in.map((e) => ({
+      id: e.from_id,
+      relation: e.relation,
+      direction: "to" as const,
+    })),
   ];
 
   if (targetIds.length === 0) return [];
@@ -95,7 +111,10 @@ export async function getRelatedNodes(
 export async function getNodeEdges(
   nodeId: string,
 ): Promise<{ outgoing: MemoryEdge[]; incoming: MemoryEdge[] }> {
-  const [outgoing, incoming] = await Promise.all([getEdgesFrom(nodeId), getEdgesTo(nodeId)]);
+  const [outgoing, incoming] = await Promise.all([
+    getEdgesFrom(nodeId),
+    getEdgesTo(nodeId),
+  ]);
   return { outgoing, incoming };
 }
 

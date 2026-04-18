@@ -31,7 +31,10 @@ export function adviseSummaryRefresh(
   return { shouldRefresh: false, reason: "summary_is_current" };
 }
 
-export function buildSummaryHint(level: SummaryLevel, projectName?: string): string {
+export function buildSummaryHint(
+  level: SummaryLevel,
+  projectName?: string,
+): string {
   switch (level) {
     case "global":
       return [

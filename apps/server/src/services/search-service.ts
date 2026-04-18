@@ -29,7 +29,9 @@ export async function searchMemoryLight(
   if (!safeQuery) return [];
 
   const ftsQuery = buildFtsQuery(safeQuery);
-  const projectFilter = projectId ? Prisma.sql`AND n.project_id = ${projectId}` : Prisma.empty;
+  const projectFilter = projectId
+    ? Prisma.sql`AND n.project_id = ${projectId}`
+    : Prisma.empty;
 
   return client.$queryRaw<LightSearchResult[]>`
     SELECT n.id, n.title, n.summary, n.memory_type, n.level, n.importance, n.updated_at
@@ -44,7 +46,9 @@ export async function searchMemoryLight(
   `;
 }
 
-export async function getMemoryDetail(id: string): Promise<DetailOutput | null> {
+export async function getMemoryDetail(
+  id: string,
+): Promise<DetailOutput | null> {
   const node = await getMemoryNodeById(id);
   if (!node) return null;
 

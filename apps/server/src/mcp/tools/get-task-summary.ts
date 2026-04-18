@@ -21,7 +21,10 @@ export const getTaskSummaryTool = {
       git_root: { type: "string" },
       remote_url: { type: "string" },
       project_id: { type: "string" },
-      task_id: { type: "string", description: "Optional task node ID to scope the summary to" },
+      task_id: {
+        type: "string",
+        description: "Optional task node ID to scope the summary to",
+      },
     },
     required: [],
   },

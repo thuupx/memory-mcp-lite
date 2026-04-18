@@ -16,10 +16,22 @@ export const getProjectSummaryTool = {
   inputSchema: {
     type: "object" as const,
     properties: {
-      workspace_path: { type: "string", description: "Absolute path to the workspace root" },
-      git_root: { type: "string", description: "Absolute path to the git repository root" },
-      remote_url: { type: "string", description: "Git remote URL for the project" },
-      project_id: { type: "string", description: "Explicit project ID if known" },
+      workspace_path: {
+        type: "string",
+        description: "Absolute path to the workspace root",
+      },
+      git_root: {
+        type: "string",
+        description: "Absolute path to the git repository root",
+      },
+      remote_url: {
+        type: "string",
+        description: "Git remote URL for the project",
+      },
+      project_id: {
+        type: "string",
+        description: "Explicit project ID if known",
+      },
     },
     required: [],
   },

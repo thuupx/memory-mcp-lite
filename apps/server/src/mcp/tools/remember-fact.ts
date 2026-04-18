@@ -24,12 +24,16 @@ export const rememberFactTool = {
     type: "object" as const,
     properties: {
       title: { type: "string", description: "Short title (max 200 chars)" },
-      summary: { type: "string", description: "Concise fact to remember (max 500 chars)" },
+      summary: {
+        type: "string",
+        description: "Concise fact to remember (max 500 chars)",
+      },
       content: { type: "string", description: "Optional extended detail" },
       fact_type: {
         type: "string",
         enum: [...ATOMIC_MEMORY_TYPES],
-        description: "Type of atomic memory: fact, command, gotcha, link, convention, decision",
+        description:
+          "Type of atomic memory: fact, command, gotcha, link, convention, decision",
       },
       workspace_path: { type: "string" },
       git_root: { type: "string" },

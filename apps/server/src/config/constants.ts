@@ -9,7 +9,11 @@ export const ATOMIC_MEMORY_TYPES = [
   "convention",
 ] as const;
 
-export const SUMMARY_MEMORY_TYPES = ["global_summary", "project_summary", "task_summary"] as const;
+export const SUMMARY_MEMORY_TYPES = [
+  "global_summary",
+  "project_summary",
+  "task_summary",
+] as const;
 
 export const MEMORY_STATUSES = ["active", "archived", "superseded"] as const;
 

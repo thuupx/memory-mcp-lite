@@ -32,14 +32,22 @@ export const upsertProjectSummaryTool = {
       git_root: { type: "string" },
       remote_url: { type: "string" },
       project_id: { type: "string" },
-      display_name: { type: "string", description: "Human-readable project name" },
+      display_name: {
+        type: "string",
+        description: "Human-readable project name",
+      },
     },
     required: ["title", "summary"],
   },
   handler: async (input: z.infer<typeof upsertProjectSummarySchema>) => {
     const { project } = await resolveProject(input);
 
-    const result = await upsertSummary(project.id, "project_summary", input.title, input.summary);
+    const result = await upsertSummary(
+      project.id,
+      "project_summary",
+      input.title,
+      input.summary,
+    );
     return { ok: true, data: result, project_id: project.id };
   },
 };

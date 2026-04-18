@@ -5,16 +5,28 @@ export async function findProjectById(id: string): Promise<Project | null> {
   return (await client.project.findUnique({ where: { id } })) as Project | null;
 }
 
-export async function findProjectByRemoteUrl(remoteUrl: string): Promise<Project | null> {
-  return (await client.project.findUnique({ where: { remote_url: remoteUrl } })) as Project | null;
+export async function findProjectByRemoteUrl(
+  remoteUrl: string,
+): Promise<Project | null> {
+  return (await client.project.findUnique({
+    where: { remote_url: remoteUrl },
+  })) as Project | null;
 }
 
-export async function findProjectByGitRoot(gitRoot: string): Promise<Project | null> {
-  return (await client.project.findUnique({ where: { git_root: gitRoot } })) as Project | null;
+export async function findProjectByGitRoot(
+  gitRoot: string,
+): Promise<Project | null> {
+  return (await client.project.findUnique({
+    where: { git_root: gitRoot },
+  })) as Project | null;
 }
 
-export async function findProjectByScopePath(scopePath: string): Promise<Project | null> {
-  return (await client.project.findUnique({ where: { scope_path: scopePath } })) as Project | null;
+export async function findProjectByScopePath(
+  scopePath: string,
+): Promise<Project | null> {
+  return (await client.project.findUnique({
+    where: { scope_path: scopePath },
+  })) as Project | null;
 }
 
 export async function upsertProject(project: Project): Promise<void> {

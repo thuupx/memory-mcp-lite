@@ -12,7 +12,10 @@ export const getMemoryDetailTool = {
   inputSchema: {
     type: "object" as const,
     properties: {
-      id: { type: "string", description: "The memory node ID to load full detail for" },
+      id: {
+        type: "string",
+        description: "The memory node ID to load full detail for",
+      },
     },
     required: ["id"],
   },

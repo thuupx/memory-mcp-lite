@@ -21,7 +21,9 @@ export interface WriteMemoryInput {
   metadata?: Record<string, unknown>;
 }
 
-export async function writeMemory(input: WriteMemoryInput): Promise<DetailOutput> {
+export async function writeMemory(
+  input: WriteMemoryInput,
+): Promise<DetailOutput> {
   const id = generateId("mem");
   const now = nowIso();
 

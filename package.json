@@ -15,7 +15,7 @@
     "db:studio": "prisma studio",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "fmt": "oxfmt",
+    "fmt": "oxfmt --write",
     "fmt:check": "oxfmt --check"
   },
   "dependencies": {
