@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getGlobalSummary } from "../../services/summary-service.js";
-import { TOOL_DESCRIPTIONS } from "../tool-descriptions.js";
+import { getGlobalSummary } from "../../services/summary-service";
+import { TOOL_DESCRIPTIONS } from "../tool-descriptions";
 
 export const getGlobalSummarySchema = z.object({});
 

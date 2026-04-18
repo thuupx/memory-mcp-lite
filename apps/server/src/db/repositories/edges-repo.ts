@@ -1,5 +1,5 @@
-import { client } from "../client.js";
-import type { MemoryEdge } from "../../types/memory.js";
+import { client } from "../client";
+import type { MemoryEdge } from "../../types/memory";
 
 export async function insertEdge(edge: MemoryEdge): Promise<void> {
   await client.memoryEdge.upsert({

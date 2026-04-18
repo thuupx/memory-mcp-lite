@@ -1,19 +1,19 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { SERVER_INSTRUCTIONS } from "./mcp/instructions.js";
-import { env } from "./config/env.js";
+import { SERVER_INSTRUCTIONS } from "./mcp/instructions";
+import { env } from "./config/env";
 
-import { getGlobalSummaryTool, getGlobalSummarySchema } from "./mcp/tools/get-global-summary.js";
-import { getProjectSummaryTool, getProjectSummarySchema } from "./mcp/tools/get-project-summary.js";
-import { getTaskSummaryTool, getTaskSummarySchema } from "./mcp/tools/get-task-summary.js";
-import { searchMemoryLightTool, searchMemoryLightSchema } from "./mcp/tools/search-memory-light.js";
-import { getMemoryDetailTool, getMemoryDetailSchema } from "./mcp/tools/get-memory-detail.js";
-import { rememberDecisionTool, rememberDecisionSchema } from "./mcp/tools/remember-decision.js";
-import { rememberFactTool, rememberFactSchema } from "./mcp/tools/remember-fact.js";
+import { getGlobalSummaryTool, getGlobalSummarySchema } from "./mcp/tools/get-global-summary";
+import { getProjectSummaryTool, getProjectSummarySchema } from "./mcp/tools/get-project-summary";
+import { getTaskSummaryTool, getTaskSummarySchema } from "./mcp/tools/get-task-summary";
+import { searchMemoryLightTool, searchMemoryLightSchema } from "./mcp/tools/search-memory-light";
+import { getMemoryDetailTool, getMemoryDetailSchema } from "./mcp/tools/get-memory-detail";
+import { rememberDecisionTool, rememberDecisionSchema } from "./mcp/tools/remember-decision";
+import { rememberFactTool, rememberFactSchema } from "./mcp/tools/remember-fact";
 import {
   upsertProjectSummaryTool,
   upsertProjectSummarySchema,
-} from "./mcp/tools/upsert-project-summary.js";
-import { upsertTaskSummaryTool, upsertTaskSummarySchema } from "./mcp/tools/upsert-task-summary.js";
+} from "./mcp/tools/upsert-project-summary";
+import { upsertTaskSummaryTool, upsertTaskSummarySchema } from "./mcp/tools/upsert-task-summary";
 
 function wrap<T>(handler: (input: T) => Promise<unknown>) {
   // SDK types the callback input as `{ [x: string]: any }` after schema validation

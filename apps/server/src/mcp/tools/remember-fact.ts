@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { resolveProject } from "../../core/project-resolver.js";
-import { writeMemory } from "../../services/memory-service.js";
-import { TOOL_DESCRIPTIONS } from "../tool-descriptions.js";
-import { ATOMIC_MEMORY_TYPES } from "../../config/constants.js";
+import { resolveProject } from "../../core/project-resolver";
+import { writeMemory } from "../../services/memory-service";
+import { TOOL_DESCRIPTIONS } from "../tool-descriptions";
+import { ATOMIC_MEMORY_TYPES } from "../../config/constants";
 
 export const rememberFactSchema = z.object({
   title: z.string().min(1).max(200),

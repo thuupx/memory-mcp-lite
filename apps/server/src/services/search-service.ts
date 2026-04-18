@@ -1,8 +1,8 @@
-import { client } from "../db/client.js";
-import { Prisma } from "../generated/prisma/index.js";
-import type { LightSearchResult, DetailOutput } from "../types/tool.js";
-import { getMemoryNodeById } from "../db/repositories/nodes-repo.js";
-import { LIGHT_SEARCH_LIMIT } from "../config/constants.js";
+import { client } from "../db/client";
+import { Prisma } from "../generated/prisma/index";
+import type { LightSearchResult, DetailOutput } from "../types/tool";
+import { getMemoryNodeById } from "../db/repositories/nodes-repo";
+import { LIGHT_SEARCH_LIMIT } from "../config/constants";
 
 function sanitizeFtsQuery(query: string): string {
   return query

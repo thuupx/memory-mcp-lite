@@ -1,6 +1,6 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { createServer } from "./server.js";
-import { initDb, closeDb } from "./db/client.js";
+import { createServer } from "./server";
+import { initDb, closeDb } from "./db/client";
 
 async function main(): Promise<void> {
   await initDb();

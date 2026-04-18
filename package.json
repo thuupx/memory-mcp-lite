@@ -5,9 +5,9 @@
   "description": "A lightweight, structured, token-efficient local-first MCP memory server",
   "type": "module",
   "scripts": {
-    "build": "node esbuild.config.mjs",
+    "build": "rm -rf dist && node esbuild.config.mjs",
     "dev": "tsx watch apps/server/src/index.ts",
-    "start": "node dist/index.js",
+    "start": "node dist/index",
     "typecheck": "tsc --noEmit",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",

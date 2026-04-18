@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getMemoryDetail } from "../../services/search-service.js";
-import { TOOL_DESCRIPTIONS } from "../tool-descriptions.js";
+import { getMemoryDetail } from "../../services/search-service";
+import { TOOL_DESCRIPTIONS } from "../tool-descriptions";
 
 export const getMemoryDetailSchema = z.object({
   id: z.string().min(1),

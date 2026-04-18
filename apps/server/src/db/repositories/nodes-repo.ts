@@ -1,5 +1,5 @@
-import { client } from "../client.js";
-import type { MemoryNode, MemoryCandidate } from "../../types/memory.js";
+import { client } from "../client";
+import type { MemoryNode, MemoryCandidate } from "../../types/memory";
 
 export async function insertMemoryNode(node: MemoryNode): Promise<void> {
   await client.memoryNode.create({

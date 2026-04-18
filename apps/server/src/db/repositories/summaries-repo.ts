@@ -1,5 +1,5 @@
-import { client } from "../client.js";
-import type { MemoryNode } from "../../types/memory.js";
+import { client } from "../client";
+import type { MemoryNode } from "../../types/memory";
 
 export async function getSummaryByTypeAndProject(
   projectId: string,

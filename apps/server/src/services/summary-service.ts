@@ -1,13 +1,13 @@
-import type { MemoryNode } from "../types/memory.js";
-import type { SummaryOutput } from "../types/tool.js";
+import type { MemoryNode } from "../types/memory";
+import type { SummaryOutput } from "../types/tool";
 import {
   getSummaryByTypeAndProject,
   upsertSummaryNode,
-} from "../db/repositories/summaries-repo.js";
-import { syncSearchIndex, insertClosureRows } from "../db/repositories/nodes-repo.js";
-import { generateId } from "../utils/ids.js";
-import { nowIso } from "../utils/time.js";
-import { GLOBAL_PROJECT_ID } from "../config/constants.js";
+} from "../db/repositories/summaries-repo";
+import { syncSearchIndex, insertClosureRows } from "../db/repositories/nodes-repo";
+import { generateId } from "../utils/ids";
+import { nowIso } from "../utils/time";
+import { GLOBAL_PROJECT_ID } from "../config/constants";
 
 type SummaryType = "global_summary" | "project_summary" | "task_summary";
 

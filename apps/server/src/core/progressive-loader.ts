@@ -1,12 +1,12 @@
-import type { SummaryOutput, LightSearchResult, DetailOutput } from "../types/tool.js";
+import type { SummaryOutput, LightSearchResult, DetailOutput } from "../types/tool";
 import {
   getGlobalSummary,
   getProjectSummary,
   getTaskSummary,
-} from "../services/summary-service.js";
-import { searchMemoryLight, getMemoryDetail } from "../services/search-service.js";
-import { gateRetrieval } from "./retrieval-gate.js";
-import { MemoryPolicy } from "./memory-policy.js";
+} from "../services/summary-service";
+import { searchMemoryLight, getMemoryDetail } from "../services/search-service";
+import { gateRetrieval } from "./retrieval-gate";
+import { MemoryPolicy } from "./memory-policy";
 
 export interface ProgressiveLoadOptions {
   query: string;

@@ -1,13 +1,13 @@
-import type { MemoryNode } from "../types/memory.js";
-import type { DetailOutput } from "../types/tool.js";
+import type { MemoryNode } from "../types/memory";
+import type { DetailOutput } from "../types/tool";
 import {
   insertMemoryNode,
   insertClosureRows,
   syncSearchIndex,
-} from "../db/repositories/nodes-repo.js";
-import { generateId } from "../utils/ids.js";
-import { nowIso } from "../utils/time.js";
-import { DEFAULT_IMPORTANCE } from "../config/constants.js";
+} from "../db/repositories/nodes-repo";
+import { generateId } from "../utils/ids";
+import { nowIso } from "../utils/time";
+import { DEFAULT_IMPORTANCE } from "../config/constants";
 
 export interface WriteMemoryInput {
   project_id: string;

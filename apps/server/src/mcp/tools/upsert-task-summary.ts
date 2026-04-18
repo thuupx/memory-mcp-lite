@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { resolveProject } from "../../core/project-resolver.js";
-import { upsertSummary } from "../../services/summary-service.js";
-import { TOOL_DESCRIPTIONS } from "../tool-descriptions.js";
+import { resolveProject } from "../../core/project-resolver";
+import { upsertSummary } from "../../services/summary-service";
+import { TOOL_DESCRIPTIONS } from "../tool-descriptions";
 
 export const upsertTaskSummarySchema = z.object({
   title: z.string().min(1).max(200),

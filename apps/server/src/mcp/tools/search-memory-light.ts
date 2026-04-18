@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { resolveProject } from "../../core/project-resolver.js";
-import { searchMemoryLight } from "../../services/search-service.js";
-import { TOOL_DESCRIPTIONS } from "../tool-descriptions.js";
-import { LIGHT_SEARCH_LIMIT } from "../../config/constants.js";
+import { resolveProject } from "../../core/project-resolver";
+import { searchMemoryLight } from "../../services/search-service";
+import { TOOL_DESCRIPTIONS } from "../tool-descriptions";
+import { LIGHT_SEARCH_LIMIT } from "../../config/constants";
 
 export const searchMemoryLightSchema = z.object({
   query: z.string().min(1),

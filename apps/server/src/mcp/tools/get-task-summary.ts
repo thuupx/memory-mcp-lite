@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { resolveProject } from "../../core/project-resolver.js";
-import { getTaskSummary } from "../../services/summary-service.js";
-import { TOOL_DESCRIPTIONS } from "../tool-descriptions.js";
+import { resolveProject } from "../../core/project-resolver";
+import { getTaskSummary } from "../../services/summary-service";
+import { TOOL_DESCRIPTIONS } from "../tool-descriptions";
 
 export const getTaskSummarySchema = z.object({
   workspace_path: z.string().optional(),

@@ -1,8 +1,8 @@
-import { client } from "../db/client.js";
-import type { MemoryEdge } from "../types/memory.js";
-import type { LightSearchResult } from "../types/tool.js";
-import { insertEdge, getEdgesFrom, getEdgesTo, deleteEdge } from "../db/repositories/edges-repo.js";
-import { EDGE_RELATIONS, type EdgeRelation } from "../db/schema.js";
+import { client } from "../db/client";
+import type { MemoryEdge } from "../types/memory";
+import type { LightSearchResult } from "../types/tool";
+import { insertEdge, getEdgesFrom, getEdgesTo, deleteEdge } from "../db/repositories/edges-repo";
+import { EDGE_RELATIONS, type EdgeRelation } from "../db/schema";
 
 export { EDGE_RELATIONS };
 export type { EdgeRelation };

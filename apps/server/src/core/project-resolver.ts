@@ -1,20 +1,20 @@
 import path from "path";
-import type { Project, ProjectResolutionInput, ProjectResolutionResult } from "../types/project.js";
+import type { Project, ProjectResolutionInput, ProjectResolutionResult } from "../types/project";
 import {
   findProjectById,
   findProjectByRemoteUrl,
   findProjectByGitRoot,
   findProjectByScopePath,
   upsertProject,
-} from "../db/repositories/projects-repo.js";
+} from "../db/repositories/projects-repo";
 import {
   tryGetGitRoot,
   tryGetRemoteUrl,
   normalizeRemoteUrl,
   extractRepoName,
-} from "../utils/git.js";
-import { shortHash } from "../utils/hash.js";
-import { nowIso } from "../utils/time.js";
+} from "../utils/git";
+import { shortHash } from "../utils/hash";
+import { nowIso } from "../utils/time";
 
 function normalizePath(p: string): string {
   return path.resolve(p).replace(/\\/g, "/").replace(/\/$/, "");
