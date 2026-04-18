@@ -6,6 +6,7 @@ await build({
   outdir: "dist",
   platform: "node",
   format: "esm",
+  minify: true,
   external: ["@modelcontextprotocol/sdk", "better-sqlite3"],
   banner: {
     js: [
