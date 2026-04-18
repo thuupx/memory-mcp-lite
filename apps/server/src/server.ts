@@ -1,62 +1,27 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { SERVER_INSTRUCTIONS } from "./mcp/instructions";
-import { env } from "./config/env";
-
+import { SERVER_INSTRUCTIONS } from "./mcp/instructions.js";
+import { env } from "./config/env.js";
 import {
   getGlobalSummaryTool,
-  getGlobalSummarySchema,
-} from "./mcp/tools/get-global-summary";
-import {
   getProjectSummaryTool,
-  getProjectSummarySchema,
-} from "./mcp/tools/get-project-summary";
-import {
   getTaskSummaryTool,
-  getTaskSummarySchema,
-} from "./mcp/tools/get-task-summary";
-import {
   searchMemoryLightTool,
-  searchMemoryLightSchema,
-} from "./mcp/tools/search-memory-light";
-import {
   getMemoryDetailTool,
-  getMemoryDetailSchema,
-} from "./mcp/tools/get-memory-detail";
-import {
   rememberDecisionTool,
-  rememberDecisionSchema,
-} from "./mcp/tools/remember-decision";
-import {
   rememberFactTool,
-  rememberFactSchema,
-} from "./mcp/tools/remember-fact";
-import {
   upsertProjectSummaryTool,
-  upsertProjectSummarySchema,
-} from "./mcp/tools/upsert-project-summary";
-import {
   upsertTaskSummaryTool,
+  // schema
+  getGlobalSummarySchema,
+  getProjectSummarySchema,
+  getTaskSummarySchema,
+  searchMemoryLightSchema,
+  getMemoryDetailSchema,
+  rememberDecisionSchema,
+  rememberFactSchema,
+  upsertProjectSummarySchema,
   upsertTaskSummarySchema,
-} from "./mcp/tools/upsert-task-summary";
-
-function wrap<T>(handler: (input: T) => Promise<unknown>) {
-  // SDK types the callback input as `{ [x: string]: any }` after schema validation
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return async (input: any) => {
-    try {
-      const result = await handler(input as T);
-      return {
-        content: [
-          { type: "text" as const, text: JSON.stringify(result, null, 2) },
-        ],
-      };
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      const payload = JSON.stringify({ ok: false, error: message }, null, 2);
-      return { content: [{ type: "text" as const, text: payload }] };
-    }
-  };
-}
+} from "./mcp/tools/index";
 
 export function createServer(): McpServer {
   const server = new McpServer(
@@ -64,67 +29,85 @@ export function createServer(): McpServer {
     { instructions: SERVER_INSTRUCTIONS },
   );
 
-  server.tool(
+  server.registerTool(
     getGlobalSummaryTool.name,
-    getGlobalSummaryTool.description,
-    getGlobalSummarySchema.shape,
-    wrap(getGlobalSummaryTool.handler),
+    {
+      description: getGlobalSummaryTool.description,
+      inputSchema: getGlobalSummarySchema.shape,
+    },
+    getGlobalSummaryTool.handler,
   );
 
-  server.tool(
+  server.registerTool(
     getProjectSummaryTool.name,
-    getProjectSummaryTool.description,
-    getProjectSummarySchema.shape,
-    wrap(getProjectSummaryTool.handler),
+    {
+      description: getProjectSummaryTool.description,
+      inputSchema: getProjectSummarySchema.shape,
+    },
+    getProjectSummaryTool.handler,
   );
 
-  server.tool(
+  server.registerTool(
     getTaskSummaryTool.name,
-    getTaskSummaryTool.description,
-    getTaskSummarySchema.shape,
-    wrap(getTaskSummaryTool.handler),
+    {
+      description: getTaskSummaryTool.description,
+      inputSchema: getTaskSummarySchema.shape,
+    },
+    getTaskSummaryTool.handler,
   );
 
-  server.tool(
+  server.registerTool(
     searchMemoryLightTool.name,
-    searchMemoryLightTool.description,
-    searchMemoryLightSchema.shape,
-    wrap(searchMemoryLightTool.handler),
+    {
+      description: searchMemoryLightTool.description,
+      inputSchema: searchMemoryLightSchema.shape,
+    },
+    searchMemoryLightTool.handler,
   );
 
-  server.tool(
+  server.registerTool(
     getMemoryDetailTool.name,
-    getMemoryDetailTool.description,
-    getMemoryDetailSchema.shape,
-    wrap(getMemoryDetailTool.handler),
+    {
+      description: getMemoryDetailTool.description,
+      inputSchema: getMemoryDetailSchema.shape,
+    },
+    getMemoryDetailTool.handler,
   );
 
-  server.tool(
+  server.registerTool(
     rememberDecisionTool.name,
-    rememberDecisionTool.description,
-    rememberDecisionSchema.shape,
-    wrap(rememberDecisionTool.handler),
+    {
+      description: rememberDecisionTool.description,
+      inputSchema: rememberDecisionSchema.shape,
+    },
+    rememberDecisionTool.handler,
   );
 
-  server.tool(
+  server.registerTool(
     rememberFactTool.name,
-    rememberFactTool.description,
-    rememberFactSchema.shape,
-    wrap(rememberFactTool.handler),
+    {
+      description: rememberFactTool.description,
+      inputSchema: rememberFactSchema.shape,
+    },
+    rememberFactTool.handler,
   );
 
-  server.tool(
+  server.registerTool(
     upsertProjectSummaryTool.name,
-    upsertProjectSummaryTool.description,
-    upsertProjectSummarySchema.shape,
-    wrap(upsertProjectSummaryTool.handler),
+    {
+      description: upsertProjectSummaryTool.description,
+      inputSchema: upsertProjectSummarySchema.shape,
+    },
+    upsertProjectSummaryTool.handler,
   );
 
-  server.tool(
+  server.registerTool(
     upsertTaskSummaryTool.name,
-    upsertTaskSummaryTool.description,
-    upsertTaskSummarySchema.shape,
-    wrap(upsertTaskSummaryTool.handler),
+    {
+      description: upsertTaskSummaryTool.description,
+      inputSchema: upsertTaskSummarySchema.shape,
+    },
+    upsertTaskSummaryTool.handler,
   );
 
   return server;

@@ -64,6 +64,13 @@ export const rememberDecisionTool = {
       source: input.source,
     });
 
-    return { ok: true, data: result, project_id: project.id };
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify({ project_id: project.id, ...result }, null, 2),
+        },
+      ],
+    };
   },
 };

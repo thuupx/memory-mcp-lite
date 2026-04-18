@@ -33,12 +33,21 @@ export const getTaskSummaryTool = {
     const result = await getTaskSummary(project.id, input.task_id);
     if (!result) {
       return {
-        ok: true,
-        data: null,
-        project_id: project.id,
-        message: "No task summary found.",
+        content: [
+          {
+            type: "text" as const,
+            text: `No task summary found for ${project.id}.`,
+          },
+        ],
       };
     }
-    return { ok: true, data: result, project_id: project.id };
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify({ project_id: project.id, ...result }, null, 2),
+        },
+      ],
+    };
   },
 };

@@ -50,6 +50,13 @@ export const searchMemoryLightTool = {
       projectId,
       input.limit,
     );
-    return { ok: true, data: results, count: results.length };
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: JSON.stringify({ count: results.length, results }, null, 2),
+        },
+      ],
+    };
   },
 };

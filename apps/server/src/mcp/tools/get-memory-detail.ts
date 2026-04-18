@@ -22,8 +22,17 @@ export const getMemoryDetailTool = {
   handler: async (input: z.infer<typeof getMemoryDetailSchema>) => {
     const result = await getMemoryDetail(input.id);
     if (!result) {
-      return { ok: false, error: `Memory not found: ${input.id}` };
+      return {
+        content: [
+          { type: "text" as const, text: `Memory not found: ${input.id}` },
+        ],
+        isError: true,
+      };
     }
-    return { ok: true, data: result };
+    return {
+      content: [
+        { type: "text" as const, text: JSON.stringify(result, null, 2) },
+      ],
+    };
   },
 };

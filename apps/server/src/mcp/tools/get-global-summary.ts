@@ -15,8 +15,14 @@ export const getGlobalSummaryTool = {
   handler: async (_input: z.infer<typeof getGlobalSummarySchema>) => {
     const result = await getGlobalSummary();
     if (!result) {
-      return { ok: true, data: null, message: "No global summary found." };
+      return {
+        content: [{ type: "text" as const, text: "No global summary found." }],
+      };
     }
-    return { ok: true, data: result };
+    return {
+      content: [
+        { type: "text" as const, text: JSON.stringify(result, null, 2) },
+      ],
+    };
   },
 };
