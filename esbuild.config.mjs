@@ -10,6 +10,7 @@ await build({
   external: ["@modelcontextprotocol/sdk", "better-sqlite3"],
   banner: {
     js: [
+      "#!/usr/bin/env node",
       "import { createRequire } from 'module';",
       "import { fileURLToPath } from 'url';",
       "import { dirname } from 'path';",

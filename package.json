@@ -1,15 +1,23 @@
 {
   "name": "memory-mcp-lite",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight, structured, token-efficient local-first MCP memory server",
   "mcpName": "io.github.thuupx/memory-mcp-lite",
   "type": "module",
+  "bin": {
+    "memory-mcp-lite": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "prisma"
+  ],
   "scripts": {
     "build": "rm -rf dist && node esbuild.config.mjs",
     "dev": "tsx watch apps/server/src/index.ts",
     "start": "node dist/index",
     "typecheck": "tsc --noEmit",
-    "postinstall": "prisma generate",
+    "prepare": "prisma generate",
+    "prepublishOnly": "npm run build",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
