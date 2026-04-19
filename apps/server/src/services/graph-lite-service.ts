@@ -1,4 +1,6 @@
-import { client } from "../db/client";
+import { and, eq, inArray } from "drizzle-orm";
+import { db } from "../db/client";
+import { memoryNodes } from "../db/schema";
 import type { MemoryEdge } from "../types/memory";
 import type { LightSearchResult } from "../types/tool";
 import {
@@ -70,23 +72,28 @@ export async function getRelatedNodes(
 
   if (targetIds.length === 0) return [];
 
-  const nodes = await client.memoryNode.findMany({
-    where: {
-      id: { in: targetIds.map((t) => t.id) },
-      status: "active",
-    },
-    select: {
-      id: true,
-      title: true,
-      summary: true,
-      memory_type: true,
-      level: true,
-      importance: true,
-      updated_at: true,
-    },
-  });
+  const nodeRows = await db
+    .select({
+      id: memoryNodes.id,
+      title: memoryNodes.title,
+      summary: memoryNodes.summary,
+      memory_type: memoryNodes.memory_type,
+      level: memoryNodes.level,
+      importance: memoryNodes.importance,
+      updated_at: memoryNodes.updated_at,
+    })
+    .from(memoryNodes)
+    .where(
+      and(
+        inArray(
+          memoryNodes.id,
+          targetIds.map((t) => t.id),
+        ),
+        eq(memoryNodes.status, "active"),
+      ),
+    );
 
-  const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+  const nodeMap = new Map(nodeRows.map((n) => [n.id, n]));
 
   return targetIds
     .map(({ id, relation: rel, direction }) => {
@@ -100,7 +107,7 @@ export async function getRelatedNodes(
         level: node.level,
         importance: node.importance,
         updated_at: node.updated_at,
-        relation: rel as string,
+        relation: rel,
         direction,
       };
       return result;

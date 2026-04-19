@@ -1,6 +1,6 @@
 node_modules/
 dist/
-apps/server/src/generated/
+drizzle/
 *.db
 *.db-shm
 *.db-wal
@@ -8,3 +8,4 @@ apps/server/src/generated/
 .env.local
 *.log
 .DS_Store
+MIGRATION_PLAN.md

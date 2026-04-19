@@ -1,50 +1,74 @@
 import { z } from "zod";
 import { resolveProject } from "../../core/project-resolver";
 import { writeMemory } from "../../services/memory-service";
-import { TOOL_DESCRIPTIONS } from "../tool-descriptions";
+import { TOOL_META } from "../tool-descriptions";
 import { ATOMIC_MEMORY_TYPES } from "../../config/constants";
 
-export const rememberFactSchema = z.object({
-  title: z.string().min(1).max(200),
-  summary: z.string().min(1).max(500),
-  content: z.string().optional(),
-  fact_type: z.enum(ATOMIC_MEMORY_TYPES).optional().default("fact"),
-  workspace_path: z.string().optional(),
-  git_root: z.string().optional(),
-  remote_url: z.string().optional(),
-  project_id: z.string().optional(),
-  importance: z.number().min(0).max(1).optional(),
-  source: z.string().optional(),
+export const rememberFactInput = z.object({
+  title: z
+    .string()
+    .min(1)
+    .max(200)
+    .describe("Short title for the fact (max 200 chars)"),
+  summary: z
+    .string()
+    .min(1)
+    .max(500)
+    .describe("Concise fact body (max 500 chars)"),
+  content: z
+    .string()
+    .optional()
+    .describe("Optional extended detail or example usage"),
+  fact_type: z
+    .enum(ATOMIC_MEMORY_TYPES)
+    .optional()
+    .default("fact")
+    .describe(
+      "Atomic memory type: fact | command | gotcha | link | convention | decision. Prefer remember_decision for 'decision'.",
+    ),
+  workspace_path: z
+    .string()
+    .optional()
+    .describe("Absolute path to the workspace root"),
+  git_root: z
+    .string()
+    .optional()
+    .describe("Absolute path to the git repository root"),
+  remote_url: z.string().optional().describe("Git remote URL"),
+  project_id: z.string().optional().describe("Explicit project id"),
+  importance: z
+    .number()
+    .min(0)
+    .max(1)
+    .optional()
+    .describe("0.0-1.0, defaults to the type-specific default in MemoryPolicy"),
+  source: z
+    .string()
+    .optional()
+    .describe("Optional source pointer (file path, PR url, doc link)"),
 });
+
+export const rememberFactOutput = z.object({
+  project_id: z.string(),
+  memory_id: z.string(),
+});
+
+const meta = TOOL_META.remember_fact;
 
 export const rememberFactTool = {
   name: "remember_fact" as const,
-  description: TOOL_DESCRIPTIONS.remember_fact,
-  inputSchema: {
-    type: "object" as const,
-    properties: {
-      title: { type: "string", description: "Short title (max 200 chars)" },
-      summary: {
-        type: "string",
-        description: "Concise fact to remember (max 500 chars)",
-      },
-      content: { type: "string", description: "Optional extended detail" },
-      fact_type: {
-        type: "string",
-        enum: [...ATOMIC_MEMORY_TYPES],
-        description:
-          "Type of atomic memory: fact, command, gotcha, link, convention, decision",
-      },
-      workspace_path: { type: "string" },
-      git_root: { type: "string" },
-      remote_url: { type: "string" },
-      project_id: { type: "string" },
-      importance: { type: "number", description: "0.0-1.0" },
-      source: { type: "string" },
-    },
-    required: ["title", "summary"],
+  title: meta.title,
+  description: meta.description,
+  inputShape: rememberFactInput.shape,
+  outputShape: rememberFactOutput.shape,
+  annotations: {
+    title: meta.title,
+    readOnlyHint: meta.readOnly,
+    destructiveHint: false,
+    idempotentHint: meta.idempotent,
+    openWorldHint: false,
   },
-  handler: async (input: z.infer<typeof rememberFactSchema>) => {
+  handler: async (input: z.infer<typeof rememberFactInput>) => {
     const { project } = await resolveProject(input);
 
     const result = await writeMemory({
@@ -57,17 +81,12 @@ export const rememberFactTool = {
       source: input.source,
     });
 
+    const structured = { project_id: project.id, memory_id: result.id };
     return {
       content: [
-        {
-          type: "text" as const,
-          text: JSON.stringify(
-            { project_id: project.id, memory_id: result.id },
-            null,
-            2,
-          ),
-        },
+        { type: "text" as const, text: JSON.stringify(structured, null, 2) },
       ],
+      structuredContent: structured,
     };
   },
 };

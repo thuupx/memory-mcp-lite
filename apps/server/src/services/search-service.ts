@@ -1,5 +1,4 @@
-import { client } from "../db/client";
-import { Prisma } from "../generated/prisma/index";
+import { libsql } from "../db/client";
 import type { LightSearchResult, DetailOutput } from "../types/tool";
 import { getMemoryNodeById } from "../db/repositories/nodes-repo";
 import { LIGHT_SEARCH_LIMIT } from "../config/constants";
@@ -29,21 +28,26 @@ export async function searchMemoryLight(
   if (!safeQuery) return [];
 
   const ftsQuery = buildFtsQuery(safeQuery);
-  const projectFilter = projectId
-    ? Prisma.sql`AND n.project_id = ${projectId}`
-    : Prisma.empty;
+  const hasProject = typeof projectId === "string";
 
-  return client.$queryRaw<LightSearchResult[]>`
+  const sqlText = `
     SELECT n.id, n.title, n.summary, n.memory_type, n.level, n.importance, n.updated_at
     FROM memory_search_index fts
     JOIN memory_nodes n ON n.id = fts.node_id
-    WHERE memory_search_index MATCH ${ftsQuery}
+    WHERE memory_search_index MATCH ?
       AND n.status = 'active'
       AND n.memory_type NOT IN ('global_summary', 'project_summary', 'task_summary')
-      ${projectFilter}
+      ${hasProject ? "AND n.project_id = ?" : ""}
     ORDER BY rank, n.importance DESC
-    LIMIT ${limit}
+    LIMIT ?
   `;
+
+  const args: (string | number)[] = [ftsQuery];
+  if (hasProject) args.push(projectId!);
+  args.push(limit);
+
+  const result = await libsql.execute({ sql: sqlText, args });
+  return result.rows as unknown as LightSearchResult[];
 }
 
 export async function getMemoryDetail(

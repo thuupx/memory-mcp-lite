@@ -2,10 +2,9 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { createServer } from "./server";
 import { initDb, closeDb } from "./db/client";
 import { ensureSchema } from "./db/migrate";
-import { env } from "./config/env";
 
 async function main(): Promise<void> {
-  ensureSchema(env.dbPath);
+  await ensureSchema();
   await initDb();
 
   const server = createServer();

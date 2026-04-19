@@ -1,4 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type {
+  CallToolResult,
+  ToolAnnotations,
+} from "@modelcontextprotocol/sdk/types.js";
+import type { ZodRawShape } from "zod";
 import { SERVER_INSTRUCTIONS } from "./mcp/instructions.js";
 import { env } from "./config/env.js";
 import {
@@ -11,17 +16,30 @@ import {
   rememberFactTool,
   upsertProjectSummaryTool,
   upsertTaskSummaryTool,
-  // schema
-  getGlobalSummarySchema,
-  getProjectSummarySchema,
-  getTaskSummarySchema,
-  searchMemoryLightSchema,
-  getMemoryDetailSchema,
-  rememberDecisionSchema,
-  rememberFactSchema,
-  upsertProjectSummarySchema,
-  upsertTaskSummarySchema,
 } from "./mcp/tools";
+
+interface RegisterableTool {
+  name: string;
+  title: string;
+  description: string;
+  inputShape: ZodRawShape;
+  outputShape: ZodRawShape;
+  annotations: ToolAnnotations;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handler: (input: any) => Promise<CallToolResult>;
+}
+
+const TOOLS: RegisterableTool[] = [
+  getGlobalSummaryTool,
+  getProjectSummaryTool,
+  getTaskSummaryTool,
+  searchMemoryLightTool,
+  getMemoryDetailTool,
+  rememberDecisionTool,
+  rememberFactTool,
+  upsertProjectSummaryTool,
+  upsertTaskSummaryTool,
+];
 
 export function createServer(): McpServer {
   const server = new McpServer(
@@ -29,86 +47,19 @@ export function createServer(): McpServer {
     { instructions: SERVER_INSTRUCTIONS },
   );
 
-  server.registerTool(
-    getGlobalSummaryTool.name,
-    {
-      description: getGlobalSummaryTool.description,
-      inputSchema: getGlobalSummarySchema.shape,
-    },
-    getGlobalSummaryTool.handler,
-  );
-
-  server.registerTool(
-    getProjectSummaryTool.name,
-    {
-      description: getProjectSummaryTool.description,
-      inputSchema: getProjectSummarySchema.shape,
-    },
-    getProjectSummaryTool.handler,
-  );
-
-  server.registerTool(
-    getTaskSummaryTool.name,
-    {
-      description: getTaskSummaryTool.description,
-      inputSchema: getTaskSummarySchema.shape,
-    },
-    getTaskSummaryTool.handler,
-  );
-
-  server.registerTool(
-    searchMemoryLightTool.name,
-    {
-      description: searchMemoryLightTool.description,
-      inputSchema: searchMemoryLightSchema.shape,
-    },
-    searchMemoryLightTool.handler,
-  );
-
-  server.registerTool(
-    getMemoryDetailTool.name,
-    {
-      description: getMemoryDetailTool.description,
-      inputSchema: getMemoryDetailSchema.shape,
-    },
-    getMemoryDetailTool.handler,
-  );
-
-  server.registerTool(
-    rememberDecisionTool.name,
-    {
-      description: rememberDecisionTool.description,
-      inputSchema: rememberDecisionSchema.shape,
-    },
-    rememberDecisionTool.handler,
-  );
-
-  server.registerTool(
-    rememberFactTool.name,
-    {
-      description: rememberFactTool.description,
-      inputSchema: rememberFactSchema.shape,
-    },
-    rememberFactTool.handler,
-  );
-
-  server.registerTool(
-    upsertProjectSummaryTool.name,
-    {
-      description: upsertProjectSummaryTool.description,
-      inputSchema: upsertProjectSummarySchema.shape,
-    },
-    upsertProjectSummaryTool.handler,
-  );
-
-  server.registerTool(
-    upsertTaskSummaryTool.name,
-    {
-      description: upsertTaskSummaryTool.description,
-      inputSchema: upsertTaskSummarySchema.shape,
-    },
-    upsertTaskSummaryTool.handler,
-  );
+  for (const tool of TOOLS) {
+    server.registerTool(
+      tool.name,
+      {
+        title: tool.title,
+        description: tool.description,
+        inputSchema: tool.inputShape,
+        outputSchema: tool.outputShape,
+        annotations: tool.annotations,
+      },
+      tool.handler,
+    );
+  }
 
   return server;
 }

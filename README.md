@@ -52,7 +52,7 @@ Optional graph-lite edges connect nodes across the tree: `related_to`, `depends_
 **Stack:**
 
 - TypeScript + Node.js ≥ 20
-- Prisma 7 + SQLite (`better-sqlite3` adapter)
+- Drizzle ORM + SQLite via libSQL (`@libsql/client`)
 - FTS5 for lexical search
 - Closure table for efficient subtree traversal
 - MCP SDK (`@modelcontextprotocol/sdk`)
@@ -93,14 +93,15 @@ Add to your MCP client config and the package will be fetched automatically via 
 
 ```bash
 npm install
-npm run db:push        # creates ~/.memory-mcp/memory.db
-npm run build          # outputs to dist/index.js
+npm run build          # outputs to dist/index.js (schema is auto-created on first run)
 ```
 
-**Custom DB path** - set `DATABASE_URL` environment variable:
+**Custom DB path** - set `MEMORY_DB_PATH` (preferred) or `DATABASE_URL`:
 
 ```bash
-DATABASE_URL="file:/path/to/custom.db" npm run dev
+MEMORY_DB_PATH="/path/to/custom.db" npm run dev
+# or point at a remote libSQL / Turso database:
+MEMORY_DB_PATH="libsql://your-db.turso.io" MEMORY_DB_AUTH_TOKEN="..." npm run dev
 ```
 
 After building, point your MCP client at the compiled output:
@@ -179,17 +180,18 @@ This makes memory portable even when clients provide inconsistent paths.
 
 ```bash
 npm run typecheck      # TypeScript check
-npm run db:push        # sync schema to DB (no migration history)
-npm run db:migrate     # create migration files (for production)
-npm run db:studio      # open Prisma Studio to browse data
+npm run lint           # oxlint
+npm run build          # bundle with esbuild
 npm run dev            # start dev server with tsx watch
+npm run db:studio      # open Drizzle Studio to browse data
+npm run db:generate    # generate migration SQL from schema changes
 ```
 
-**DB location:** `~/.memory-mcp/memory.db` (default)
+**DB location:** `~/.memory-mcp/memory.db` (default). Override with `MEMORY_DB_PATH`, `MEMORY_DATA_DIR`, or `DATABASE_URL`.
 
-**Schema:** `prisma/schema.prisma` - edit here, then run `npm run db:push`
+**Schema:** `apps/server/src/db/schema.ts` (Drizzle). The schema is re-asserted on every startup via `ensureSchema()` in `apps/server/src/db/migrate.ts`, which also creates the FTS5 virtual table and triggers.
 
-**FTS5 index:** created at server startup by `initDb()` in `db/client.ts` (Prisma does not manage virtual tables)
+**Remote libSQL / Turso:** set `MEMORY_DB_PATH` to a `libsql://…` URL and `MEMORY_DB_AUTH_TOKEN` to the token.
 
 ## Tools
 

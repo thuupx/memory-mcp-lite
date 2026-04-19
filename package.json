@@ -1,13 +1,12 @@
 {
   "name": "memory-mcp-lite",
-  "version": "1.0.4",
-  "description": "A lightweight, structured, token-efficient local-first MCP memory server",
+  "version": "2.0.0",
+  "description": "A lightweight, structured, token-efficient local-first MCP memory server (Drizzle + libSQL)",
   "bin": {
     "memory-mcp-lite": "dist/index.js"
   },
   "files": [
-    "dist",
-    "prisma"
+    "dist"
   ],
   "type": "module",
   "scripts": {
@@ -15,30 +14,27 @@
     "dev": "tsx watch apps/server/src/index.ts",
     "start": "node dist/index",
     "typecheck": "tsc --noEmit",
-    "prepare": "prisma generate",
     "prepublishOnly": "npm run build",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt --write",
     "fmt:check": "oxfmt --check"
   },
   "dependencies": {
+    "@libsql/client": "^0.14.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@prisma/adapter-better-sqlite3": "^7.7.0",
-    "@prisma/client": "^7.7.0",
-    "better-sqlite3": "^11.10.0",
+    "drizzle-orm": "^0.36.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.19.17",
+    "drizzle-kit": "^0.28.0",
     "esbuild": "0.28.0",
     "oxfmt": "^0.45.0",
     "oxlint": "^1.60.0",
-    "prisma": "^7.7.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
