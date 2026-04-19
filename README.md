@@ -1,42 +1,26 @@
-# Memory MCP Lite
+# memory-mcp-lite
 
-A **local-first, token-efficient MCP memory server** for AI coding clients (Windsurf, Cursor, Claude Desktop, and any MCP-compatible client).
+A small, opinionated memory server for AI coding assistants (Windsurf, Cursor, Claude Desktop — anything that speaks MCP).
 
-## What this is
+It runs locally, stores durable knowledge on your disk, and tries very hard to stay out of your agent's way until you actually need it.
 
-A lightweight, structured memory layer that persists across AI coding sessions. It complements your AI client's built-in context by storing durable, structured knowledge.
+## Why this exists
 
-**What it stores:**
+Most AI clients already have some form of short-term memory. They remember the current conversation, maybe a few rules you've set, and that's about it. What they don't give you is a place to park things that should outlive the session — the architectural decision you made last week, the one weird build command for this repo, the gotcha that bit you three times in a row.
 
-- Technical decisions and their rationale
-- Project architecture and conventions
-- Gotchas, commands, and environment facts
-- Task state for resumable work sessions
-- Hierarchical summaries (global -> project -> task)
+memory-mcp-lite is that place. It stores:
 
-**What it does NOT do:**
+- technical decisions and the reasoning behind them,
+- project architecture and conventions,
+- commands, env notes, links, and gotchas,
+- task state so you can resume work later,
+- rolled-up summaries at the global / project / task level.
 
-- Store raw chat transcripts
-- Replace your AI client's built-in memory or rules
-- Run embeddings or vector search (phase 1)
-- Require a server or cloud connection
+It deliberately does **not** store raw chat transcripts, replace your client's built-in rules, run embeddings or vector search, or need a server or cloud connection.
 
-## Architecture
+## How it's organised
 
-```
-Retrieval policy (summary-first)
-        │
-        ▼
-Stage 1: global / project / task summaries   // compact, always cheap
-        │
-        ▼ (only if summaries insufficient)
-Stage 2: FTS5 light search → compact candidates
-        │
-        ▼ (only for top 1-3 results)
-Stage 3: full memory detail
-```
-
-Memory is organized in a tree:
+Memory lives in a tree:
 
 ```
 global
@@ -47,23 +31,37 @@ global
         └── atomic  // decision | fact | gotcha | command | link | convention
 ```
 
-Optional graph-lite edges connect nodes across the tree: `related_to`, `depends_on`, `affects`, `caused_by`, `supersedes`, `references`.
+On top of the tree you can draw optional graph-lite edges between any two nodes — `related_to`, `depends_on`, `affects`, `caused_by`, `supersedes`, `references`. Handy when one decision obsoletes another, or a gotcha only matters in the context of a specific command.
 
-**Stack:**
+The retrieval side is built to be cheap. The server's instructions push agents through three stages, from least to most expensive:
 
-- TypeScript + Node.js ≥ 20
-- Drizzle ORM + SQLite via libSQL (`@libsql/client`)
-- FTS5 for lexical search
-- Closure table for efficient subtree traversal
-- MCP SDK (`@modelcontextprotocol/sdk`)
+```
+Stage 1 — summaries              get_global_summary / get_project_summary / get_task_summary
+        │
+        ▼ (only if summaries aren't enough)
+Stage 2 — FTS5 light search      search_memory_light → compact candidates
+        │
+        ▼ (only for the 1–3 most relevant hits)
+Stage 3 — full detail            get_memory_detail
+```
 
-## Installation
+In practice this means your agent asks for a summary first, and only pays for the big payload when it has a specific reason to. If you skip this policy, you just end up dumping a bunch of stringly-typed JSON into context for no reason.
 
-### Via npm (Recommended)
+## Stack
 
-Add to your MCP client config and the package will be fetched automatically via `npx`.
+- TypeScript, Node ≥ 20
+- Drizzle ORM over libSQL (`@libsql/client`)
+- SQLite FTS5 for lexical search
+- A closure table for efficient subtree traversal
+- The MCP TypeScript SDK (`@modelcontextprotocol/sdk`)
 
-**Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
+You can point it at a local file, a remote libSQL instance, or a Turso database — they all work the same.
+
+## Install
+
+The fast path is to let your MCP client fetch the package via `npx`.
+
+**Windsurf** — `~/.codeium/windsurf/mcp_config.json`:
 
 ```json
 {
@@ -76,7 +74,7 @@ Add to your MCP client config and the package will be fetched automatically via 
 }
 ```
 
-**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+**Claude Desktop** — `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
@@ -89,126 +87,109 @@ Add to your MCP client config and the package will be fetched automatically via 
 }
 ```
 
-### From Source
+Same pattern for any other MCP-compatible client; only the config file path changes.
+
+### From source
 
 ```bash
 npm install
-npm run build          # outputs to dist/index.js (schema is auto-created on first run)
+npm run build    # outputs dist/index.js; the schema is created on first run
 ```
 
-**Custom DB path** - set `MEMORY_DB_PATH` (preferred) or `DATABASE_URL`:
-
-```bash
-MEMORY_DB_PATH="/path/to/custom.db" npm run dev
-# or point at a remote libSQL / Turso database:
-MEMORY_DB_PATH="libsql://your-db.turso.io" MEMORY_DB_AUTH_TOKEN="..." npm run dev
-```
-
-After building, point your MCP client at the compiled output:
-
-**Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
+Then point your client at the compiled bundle:
 
 ```json
 {
   "mcpServers": {
     "memory-mcp-lite": {
       "command": "node",
-      "args": ["/absolute/path/to/memory-mcp/dist/index.js"]
+      "args": ["/absolute/path/to/memory-mcp-lite/dist/index.js"]
     }
   }
 }
 ```
 
-**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "memory-mcp-lite": {
-      "command": "node",
-      "args": ["/absolute/path/to/memory-mcp/dist/index.js"]
-    }
-  }
-}
-```
-
-For development without a build step, use `tsx`:
+If you want to iterate on the code without a build step, `tsx` works:
 
 ```json
 {
   "mcpServers": {
     "memory-mcp-lite": {
       "command": "npx",
-      "args": ["tsx", "/absolute/path/to/memory-mcp/apps/server/src/index.ts"]
+      "args": ["tsx", "/absolute/path/to/memory-mcp-lite/apps/server/src/index.ts"]
     }
   }
 }
 ```
 
-## MCP Tool Reference
+### Where the data lives
 
-| Tool                     | When to use                                                    |
-| ------------------------ | -------------------------------------------------------------- |
-| `get_global_summary`     | Recurring preferences, coding style, cross-project conventions |
-| `get_project_summary`    | Project architecture, key decisions, long-term context         |
-| `get_task_summary`       | Resume previous work, recall progress or next steps            |
-| `search_memory_light`    | When summaries aren't enough - returns compact candidates only |
-| `get_memory_detail`      | Load full detail for a specific memory (follow-up to search)   |
-| `remember_decision`      | Store architecture choices, trade-offs, rejected alternatives  |
-| `remember_fact`          | Store commands, env facts, gotchas, links, conventions         |
-| `upsert_project_summary` | Update after major architectural changes or new conventions    |
-| `upsert_task_summary`    | Update after progress, blockers, or plan changes               |
+By default: `~/.memory-mcp/memory.db`. Override it with any of:
 
-**Retrieval discipline enforced by server instructions:**
+| Env var                  | Purpose                                    |
+| ------------------------ | ------------------------------------------ |
+| `MEMORY_DB_PATH`         | Full path or `libsql://…` / `file:` URL.   |
+| `MEMORY_DATA_DIR`        | Directory; the file is still `memory.db`.  |
+| `DATABASE_URL`           | Accepted for backwards compatibility.      |
+| `MEMORY_DB_AUTH_TOKEN`   | Bearer token for remote libSQL / Turso.    |
 
-1. Always start with summaries
-2. Only search if summaries are insufficient
-3. Load full detail for at most 1-3 results
-4. Never dump large memory bodies by default
+So running against Turso is just:
 
-## Project Identity
+```bash
+MEMORY_DB_PATH="libsql://your-db.turso.io" \
+MEMORY_DB_AUTH_TOKEN="eyJhbGci..." \
+npm run dev
+```
 
-Projects are identified by (in priority order):
+## Tools
 
-1. Normalized git remote URL - most stable, survives moves
-2. Git root path - fallback when no remote
-3. Normalized workspace path - last resort
+Nine tools, all returning both a human-readable JSON block and a `structuredContent` object for programmatic clients. The server also ships a strict `description` and `annotations` payload for each tool so agents can pick the right one without guessing.
 
-This makes memory portable even when clients provide inconsistent paths.
+| Tool                     | Reach for it when…                                      |
+| ------------------------ | ------------------------------------------------------- |
+| `get_global_summary`     | recurring preferences, cross-project conventions        |
+| `get_project_summary`    | architecture, key decisions, long-term project context  |
+| `get_task_summary`       | resuming a specific piece of work                       |
+| `search_memory_light`    | summaries aren't enough; you want compact candidates    |
+| `get_memory_detail`      | you've picked a candidate and need the full body        |
+| `remember_decision`      | an architecture choice, trade-off, or rejected path     |
+| `remember_fact`          | a command, env note, gotcha, link, or convention        |
+| `upsert_project_summary` | after an arch change or new convention worth recording  |
+| `upsert_task_summary`    | after progress, blockers, or a plan change              |
+
+The retrieval discipline the server asks agents to follow:
+
+1. summaries first,
+2. light search only if summaries aren't enough,
+3. full detail for at most 1–3 hits,
+4. never dump every memory just because you can.
+
+## Project identity
+
+Projects are looked up in this priority order:
+
+1. **Normalised git remote URL** — the most stable; survives directory moves and clones.
+2. **Git root path** — used when there's no remote.
+3. **Normalised workspace path** — the fallback.
+
+This means the same project keeps the same memory even if different clients hand you slightly different paths, and moving a repo doesn't orphan everything you've stored.
 
 ## Development
 
 ```bash
-npm run typecheck      # TypeScript check
+npm run typecheck      # TypeScript
 npm run lint           # oxlint
-npm run build          # bundle with esbuild
-npm run dev            # start dev server with tsx watch
-npm run db:studio      # open Drizzle Studio to browse data
-npm run db:generate    # generate migration SQL from schema changes
+npm run test           # vitest
+npm run build          # esbuild bundle to dist/
+npm run dev            # tsx watch
+npm run db:studio      # Drizzle Studio for poking at the DB
+npm run db:generate    # generate migration SQL when the schema changes
 ```
 
-**DB location:** `~/.memory-mcp/memory.db` (default). Override with `MEMORY_DB_PATH`, `MEMORY_DATA_DIR`, or `DATABASE_URL`.
-
-**Schema:** `apps/server/src/db/schema.ts` (Drizzle). The schema is re-asserted on every startup via `ensureSchema()` in `apps/server/src/db/migrate.ts`, which also creates the FTS5 virtual table and triggers.
-
-**Remote libSQL / Turso:** set `MEMORY_DB_PATH` to a `libsql://…` URL and `MEMORY_DB_AUTH_TOKEN` to the token.
-
-## Tools
-
-| Tool                     | Use when                                                |
-| ------------------------ | ------------------------------------------------------- |
-| `get_global_summary`     | recurring preferences, cross-project conventions        |
-| `get_project_summary`    | architecture, key decisions, long-term context          |
-| `get_task_summary`       | resuming work                                           |
-| `search_memory_light`    | summaries aren't enough — compact candidates only       |
-| `get_memory_detail`      | full detail for a specific result (follow-up to search) |
-| `remember_decision`      | architecture choices, trade-offs, rejected alternatives |
-| `remember_fact`          | commands, env facts, gotchas, links, conventions        |
-| `upsert_project_summary` | after major arch changes or new conventions             |
-| `upsert_task_summary`    | after progress, blockers, or plan changes               |
+The schema is defined in `apps/server/src/db/schema.ts` and re-asserted on every startup by `ensureSchema()` (see `apps/server/src/db/migrate.ts`). That function is also where the FTS5 virtual table and its triggers get created — Drizzle doesn't manage virtual tables, so we do it ourselves with plain SQL. It's idempotent, so there's nothing to run manually.
 
 ## Roadmap
 
-- **Phase 9** - Optional semantic fallback (local embeddings, feature-flagged)
-- **Future** - Node archival/cleanup for long-lived projects
-- **Future** - Multi-user / shared-team memory (requires auth layer)
+- Optional semantic fallback (local embeddings, feature-flagged).
+- Node archival / cleanup for long-lived projects.
+- Shared-team memory, once there's a good story for auth.
