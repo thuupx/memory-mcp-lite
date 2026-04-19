@@ -32,7 +32,7 @@ Stage 1: global / project / task summaries   ← compact, always cheap
         ▼ (only if summaries insufficient)
 Stage 2: FTS5 light search → compact candidates
         │
-        ▼ (only for top 1–3 results)
+        ▼ (only for top 1-3 results)
 Stage 3: full memory detail
 ```
 
@@ -143,7 +143,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 1. Always start with summaries
 2. Only search if summaries are insufficient
-3. Load full detail for at most 1–3 results
+3. Load full detail for at most 1-3 results
 4. Never dump large memory bodies by default
 
 ## Project Identity

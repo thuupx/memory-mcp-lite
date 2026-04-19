@@ -21,7 +21,7 @@ import {
   rememberFactSchema,
   upsertProjectSummarySchema,
   upsertTaskSummarySchema,
-} from "./mcp/tools/index";
+} from "./mcp/tools";
 
 export function createServer(): McpServer {
   const server = new McpServer(

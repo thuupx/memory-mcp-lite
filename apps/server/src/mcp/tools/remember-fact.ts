@@ -39,7 +39,7 @@ export const rememberFactTool = {
       git_root: { type: "string" },
       remote_url: { type: "string" },
       project_id: { type: "string" },
-      importance: { type: "number", description: "0.0–1.0" },
+      importance: { type: "number", description: "0.0-1.0" },
       source: { type: "string" },
     },
     required: ["title", "summary"],

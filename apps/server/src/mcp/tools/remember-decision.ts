@@ -42,7 +42,7 @@ export const rememberDecisionTool = {
       project_id: { type: "string" },
       importance: {
         type: "number",
-        description: "0.0–1.0, defaults to 0.8 for decisions",
+        description: "0.0-1.0, defaults to 0.8 for decisions",
       },
       source: {
         type: "string",
