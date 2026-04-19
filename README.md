@@ -59,9 +59,9 @@ Optional graph-lite edges connect nodes across the tree: `related_to`, `depends_
 
 ## Installation
 
-### From MCP Registry (Recommended)
+### Via npm (Recommended)
 
-Add to your MCP client configuration using npx to run the published npm package:
+Add to your MCP client config and the package will be fetched automatically via `npx`.
 
 **Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
 
@@ -89,12 +89,12 @@ Add to your MCP client configuration using npx to run the published npm package:
 }
 ```
 
-### Local Development Setup
+### From Source
 
 ```bash
 npm install
 npm run db:push        # creates ~/.memory-mcp/memory.db
-npm run dev            # stdio MCP server (for development)
+npm run build          # outputs to dist/index.js
 ```
 
 **Custom DB path** - set `DATABASE_URL` environment variable:
@@ -103,55 +103,42 @@ npm run dev            # stdio MCP server (for development)
 DATABASE_URL="file:/path/to/custom.db" npm run dev
 ```
 
-**Build for production:**
+After building, point your MCP client at the compiled output:
 
-```bash
-npm run build
-node dist/apps/server/src/index.js
-```
-
-## MCP Client Configuration
-
-### Windsurf
-
-Add to your MCP settings (`~/.codeium/windsurf/mcp_config.json`):
+**Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
 
 ```json
 {
   "mcpServers": {
     "memory-mcp-lite": {
       "command": "node",
-      "args": ["/absolute/path/to/memory-mcp/dist/apps/server/src/index"],
-      "env": {}
+      "args": ["/absolute/path/to/memory-mcp/dist/index.js"]
     }
   }
 }
 ```
 
-For development with `tsx`:
+**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "memory-mcp-lite": {
+      "command": "node",
+      "args": ["/absolute/path/to/memory-mcp/dist/index.js"]
+    }
+  }
+}
+```
+
+For development without a build step, use `tsx`:
 
 ```json
 {
   "mcpServers": {
     "memory-mcp-lite": {
       "command": "npx",
-      "args": ["tsx", "/absolute/path/to/memory-mcp/apps/server/src/index.ts"],
-      "env": {}
-    }
-  }
-}
-```
-
-### Claude Desktop
-
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "memory-mcp-lite": {
-      "command": "node",
-      "args": ["/absolute/path/to/memory-mcp/dist/apps/server/src/index"]
+      "args": ["tsx", "/absolute/path/to/memory-mcp/apps/server/src/index.ts"]
     }
   }
 }

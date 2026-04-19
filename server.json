@@ -1,23 +1,21 @@
 {
-  "name": "memory-mcp-lite",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "io.github.thuupx/memory-mcp-lite",
   "version": "1.0.0",
   "description": "A lightweight, structured, token-efficient local-first MCP memory server",
-  "author": "Thu Pham",
-  "license": "MIT",
-  "runtime": "node",
-  "executable": {
-    "command": "npx",
-    "args": ["memory-mcp-lite"]
-  },
+  "packages": [
+    {
+      "registry_type": "npm",
+      "identifier": "memory-mcp-lite",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/thuupx/memory-mcp-lite.git"
-  },
-  "keywords": [
-    "mcp",
-    "memory",
-    "context",
-    "ai",
-    "local-first"
-  ]
+    "url": "https://github.com/thuupx/memory-mcp-lite.git",
+    "source": "https://github.com/thuupx/memory-mcp-lite"
+  }
 }
