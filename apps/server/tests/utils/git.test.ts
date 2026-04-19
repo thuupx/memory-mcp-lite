@@ -35,7 +35,7 @@ describe("extractRepoName", () => {
     expect(extractRepoName("git@github.com:acme/repo.git")).toBe("repo");
   });
 
-  it("returns null for an empty string", () => {
+  it("returns an empty string for an empty input", () => {
     expect(extractRepoName("")).toBe("");
   });
 });
