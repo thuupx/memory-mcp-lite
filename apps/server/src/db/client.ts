@@ -1,43 +1,58 @@
-import { PrismaClient } from "../generated/prisma/index";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { drizzle } from "drizzle-orm/libsql";
+import { createClient, type Client } from "@libsql/client";
+import { eq } from "drizzle-orm";
 import path from "path";
 import fs from "fs";
 import { env } from "../config/env";
 import { GLOBAL_PROJECT_ID } from "../config/constants";
 import { nowIso } from "../utils/time";
+import * as schema from "./schema";
 
-function createClient(): PrismaClient {
-  const dbDir = path.dirname(env.dbPath);
+function resolveLibsqlUrl(dbPath: string): string {
+  if (/^(libsql|http|https|ws|wss):\/\//i.test(dbPath)) {
+    return dbPath;
+  }
+  if (dbPath.startsWith("file:") || dbPath === ":memory:") {
+    return dbPath;
+  }
+  const dbDir = path.dirname(dbPath);
   if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });
   }
-  const adapter = new PrismaBetterSqlite3({ url: `file:${env.dbPath}` });
-  return new PrismaClient({ adapter });
+  return `file:${dbPath}`;
 }
 
-export const client = createClient();
+function createLibsql(): Client {
+  const authToken = env.dbAuthToken ?? undefined;
+  return createClient({ url: resolveLibsqlUrl(env.dbPath), authToken });
+}
+
+export const libsql: Client = createLibsql();
+export const db = drizzle({ client: libsql, schema });
+export type DB = typeof db;
 
 export async function initDb(): Promise<void> {
-  const existing = await client.project.findUnique({
-    where: { id: GLOBAL_PROJECT_ID },
-  });
-  if (!existing) {
+  const existing = await db
+    .select()
+    .from(schema.projects)
+    .where(eq(schema.projects.id, GLOBAL_PROJECT_ID))
+    .limit(1);
+
+  if (existing.length === 0) {
     const now = nowIso();
-    await client.project.create({
-      data: {
-        id: GLOBAL_PROJECT_ID,
-        scope_path: GLOBAL_PROJECT_ID,
-        git_root: null,
-        remote_url: null,
-        repo_name: null,
-        display_name: "Global",
-        created_at: now,
-        updated_at: now,
-      },
+    await db.insert(schema.projects).values({
+      id: GLOBAL_PROJECT_ID,
+      scope_path: GLOBAL_PROJECT_ID,
+      git_root: null,
+      remote_url: null,
+      repo_name: null,
+      display_name: "Global",
+      created_at: now,
+      updated_at: now,
     });
   }
 }
 
 export async function closeDb(): Promise<void> {
-  await client.$disconnect();
+  libsql.close();
 }

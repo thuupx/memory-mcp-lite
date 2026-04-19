@@ -7,7 +7,7 @@ await build({
   platform: "node",
   format: "esm",
   minify: true,
-  external: ["@modelcontextprotocol/sdk", "better-sqlite3"],
+  external: ["@modelcontextprotocol/sdk", "@libsql/client", "libsql"],
   banner: {
     js: [
       "#!/usr/bin/env node",
