@@ -57,7 +57,39 @@ Optional graph-lite edges connect nodes across the tree: `related_to`, `depends_
 - Closure table for efficient subtree traversal
 - MCP SDK (`@modelcontextprotocol/sdk`)
 
-## Setup
+## Installation
+
+### From MCP Registry (Recommended)
+
+Add to your MCP client configuration using npx to run the published npm package:
+
+**Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "memory-mcp-lite": {
+      "command": "npx",
+      "args": ["memory-mcp-lite"]
+    }
+  }
+}
+```
+
+**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "memory-mcp-lite": {
+      "command": "npx",
+      "args": ["memory-mcp-lite"]
+    }
+  }
+}
+```
+
+### Local Development Setup
 
 ```bash
 npm install
