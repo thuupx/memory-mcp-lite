@@ -1,6 +1,6 @@
 {
   "name": "memory-mcp-lite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight, structured, token-efficient local-first MCP memory server",
   "mcpName": "io.github.thuupx/memory-mcp-lite",
   "type": "module",
