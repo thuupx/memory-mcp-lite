@@ -61,7 +61,11 @@ export const rememberFactTool = {
       content: [
         {
           type: "text" as const,
-          text: JSON.stringify({ project_id: project.id, ...result }, null, 2),
+          text: JSON.stringify(
+            { project_id: project.id, memory_id: result.id },
+            null,
+            2,
+          ),
         },
       ],
     };

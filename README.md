@@ -4,7 +4,7 @@ A **local-first, token-efficient MCP memory server** for AI coding clients (Wind
 
 ## What this is
 
-A lightweight, structured memory layer that persists across AI coding sessions. It complements your AI client's built-in context by storing durable, structured knowledge — not raw chat logs.
+A lightweight, structured memory layer that persists across AI coding sessions. It complements your AI client's built-in context by storing durable, structured knowledge - not raw chat logs.
 
 **What it stores:**
 
@@ -65,7 +65,7 @@ npm run db:push        # creates ~/.memory-mcp/memory.db
 npm run dev            # stdio MCP server (for development)
 ```
 
-**Custom DB path** — set `DATABASE_URL` environment variable:
+**Custom DB path** - set `DATABASE_URL` environment variable:
 
 ```bash
 DATABASE_URL="file:/path/to/custom.db" npm run dev
@@ -132,7 +132,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 | `get_global_summary`     | Recurring preferences, coding style, cross-project conventions |
 | `get_project_summary`    | Project architecture, key decisions, long-term context         |
 | `get_task_summary`       | Resume previous work, recall progress or next steps            |
-| `search_memory_light`    | When summaries aren't enough — returns compact candidates only |
+| `search_memory_light`    | When summaries aren't enough - returns compact candidates only |
 | `get_memory_detail`      | Load full detail for a specific memory (follow-up to search)   |
 | `remember_decision`      | Store architecture choices, trade-offs, rejected alternatives  |
 | `remember_fact`          | Store commands, env facts, gotchas, links, conventions         |
@@ -150,9 +150,9 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 Projects are identified by (in priority order):
 
-1. Normalized git remote URL — most stable, survives moves
-2. Git root path — fallback when no remote
-3. Normalized workspace path — last resort
+1. Normalized git remote URL - most stable, survives moves
+2. Git root path - fallback when no remote
+3. Normalized workspace path - last resort
 
 This makes memory portable even when clients provide inconsistent paths.
 
@@ -168,7 +168,7 @@ npm run dev            # start dev server with tsx watch
 
 **DB location:** `~/.memory-mcp/memory.db` (default)
 
-**Schema:** `prisma/schema.prisma` — edit here, then run `npm run db:push`
+**Schema:** `prisma/schema.prisma` - edit here, then run `npm run db:push`
 
 **FTS5 index:** created at server startup by `initDb()` in `db/client.ts` (Prisma does not manage virtual tables)
 
@@ -213,6 +213,6 @@ prisma.config.ts              # datasource URL for migrate/push
 
 ## Roadmap
 
-- **Phase 9** — Optional semantic fallback (local embeddings, feature-flagged)
-- **Future** — Node archival/cleanup for long-lived projects
-- **Future** — Multi-user / shared-team memory (requires auth layer)
+- **Phase 9** - Optional semantic fallback (local embeddings, feature-flagged)
+- **Future** - Node archival/cleanup for long-lived projects
+- **Future** - Multi-user / shared-team memory (requires auth layer)

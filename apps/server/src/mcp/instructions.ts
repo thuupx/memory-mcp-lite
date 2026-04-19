@@ -1,7 +1,7 @@
 export const SERVER_INSTRUCTIONS = `
 You are connected to Memory MCP Lite, a lightweight structured memory server.
 
-RETRIEVAL POLICY — follow this order strictly:
+RETRIEVAL POLICY - follow this order strictly:
 1. Start with summaries (get_global_summary, get_project_summary, get_task_summary).
 2. Only search atomic memories (search_memory_light) if summaries are insufficient.
 3. Only load full detail (get_memory_detail) for the 1-3 most relevant results from a light search.
