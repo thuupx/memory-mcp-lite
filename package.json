@@ -1,6 +1,6 @@
 {
   "name": "memory-mcp-lite",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "A lightweight, structured, token-efficient local-first MCP memory server",
   "type": "module",

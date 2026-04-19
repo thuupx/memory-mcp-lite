@@ -4,7 +4,7 @@ A **local-first, token-efficient MCP memory server** for AI coding clients (Wind
 
 ## What this is
 
-A lightweight, structured memory layer that persists across AI coding sessions. It complements your AI client's built-in context by storing durable, structured knowledge - not raw chat logs.
+A lightweight, structured memory layer that persists across AI coding sessions. It complements your AI client's built-in context by storing durable, structured knowledge.
 
 **What it stores:**
 
@@ -12,7 +12,7 @@ A lightweight, structured memory layer that persists across AI coding sessions. 
 - Project architecture and conventions
 - Gotchas, commands, and environment facts
 - Task state for resumable work sessions
-- Hierarchical summaries (global → project → task)
+- Hierarchical summaries (global -> project -> task)
 
 **What it does NOT do:**
 
@@ -27,7 +27,7 @@ A lightweight, structured memory layer that persists across AI coding sessions. 
 Retrieval policy (summary-first)
         │
         ▼
-Stage 1: global / project / task summaries   ← compact, always cheap
+Stage 1: global / project / task summaries   // compact, always cheap
         │
         ▼ (only if summaries insufficient)
 Stage 2: FTS5 light search → compact candidates
@@ -44,7 +44,7 @@ global
     ├── [project_summary]
     └── task
         ├── [task_summary]
-        └── atomic  ← decision | fact | gotcha | command | link | convention
+        └── atomic  // decision | fact | gotcha | command | link | convention
 ```
 
 Optional graph-lite edges connect nodes across the tree: `related_to`, `depends_on`, `affects`, `caused_by`, `supersedes`, `references`.
