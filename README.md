@@ -191,44 +191,19 @@ npm run dev            # start dev server with tsx watch
 
 **FTS5 index:** created at server startup by `initDb()` in `db/client.ts` (Prisma does not manage virtual tables)
 
-## Folder Structure
+## Tools
 
-```
-apps/server/src/
-  index.ts                    # entry point
-  server.ts                   # MCP server wiring
-  config/
-    env.ts                    # DB path, server name/version
-    constants.ts              # numeric defaults
-  core/
-    project-resolver.ts       # robust project identity resolution
-    retrieval-gate.ts         # gating policy (skip / summaries / search / detail)
-    summary-policy.ts         # summary freshness and update advice
-    progressive-loader.ts     # 3-stage staged retrieval coordinator
-    memory-policy.ts          # importance defaults and retention config
-  db/
-    client.ts                 # PrismaClient singleton + FTS5 init
-    schema.ts                 # FTS5 SQL + edge relation type definitions
-    repositories/             # typed async data access functions
-  services/
-    summary-service.ts        # global / project / task summary CRUD
-    search-service.ts         # FTS5 light search + detail loader
-    memory-service.ts         # atomic memory write path
-    graph-lite-service.ts     # edge CRUD and related node queries
-  mcp/
-    instructions.ts           # server-level retrieval instructions
-    tool-descriptions.ts      # strong tool descriptions
-    tools/                    # 9 tool handlers with Zod validation
-  types/
-    memory.ts                 # MemoryNode, MemoryLevel, AtomicMemoryType
-    project.ts                # Project, resolution types
-    tool.ts                   # SummaryOutput, LightSearchResult, DetailOutput
-  utils/
-    time.ts ids.ts hash.ts git.ts
-prisma/
-  schema.prisma               # Prisma 7 schema (projects, nodes, closure, edges)
-prisma.config.ts              # datasource URL for migrate/push
-```
+| Tool                     | Use when                                                |
+| ------------------------ | ------------------------------------------------------- |
+| `get_global_summary`     | recurring preferences, cross-project conventions        |
+| `get_project_summary`    | architecture, key decisions, long-term context          |
+| `get_task_summary`       | resuming work                                           |
+| `search_memory_light`    | summaries aren't enough — compact candidates only       |
+| `get_memory_detail`      | full detail for a specific result (follow-up to search) |
+| `remember_decision`      | architecture choices, trade-offs, rejected alternatives |
+| `remember_fact`          | commands, env facts, gotchas, links, conventions        |
+| `upsert_project_summary` | after major arch changes or new conventions             |
+| `upsert_task_summary`    | after progress, blockers, or plan changes               |
 
 ## Roadmap
 

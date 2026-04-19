@@ -1,9 +1,7 @@
 {
   "name": "memory-mcp-lite",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A lightweight, structured, token-efficient local-first MCP memory server",
-  "mcpName": "io.github.thuupx/memory-mcp-lite",
-  "type": "module",
   "bin": {
     "memory-mcp-lite": "dist/index.js"
   },
@@ -11,6 +9,7 @@
     "dist",
     "prisma"
   ],
+  "type": "module",
   "scripts": {
     "build": "rm -rf dist && node esbuild.config.mjs",
     "dev": "tsx watch apps/server/src/index.ts",
@@ -45,5 +44,6 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "mcpName": "io.github.thuupx/memory-mcp-lite"
 }
